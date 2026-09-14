@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pricing Dashboard</title>
+    <style>
+      :root {
+        --bg: #f4f1ea;
+        --panel: #fffdf8;
+        --ink: #1f2430;
+        --muted: #5d6575;
+        --line: #d8d1c5;
+        --accent: #8a4b2a;
+        --accent-soft: #f2e4d8;
+      }
+      body {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top right, #f8ead9, transparent 24%),
+          linear-gradient(180deg, #f7f3ec 0%, var(--bg) 100%);
+      }
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+      }
+      .hero {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      .hero p {
+        color: var(--muted);
+        margin: 0;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .card, .wide {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: 0 14px 36px rgba(55, 44, 22, 0.08);
+      }
+      .card {
+        padding: 18px 20px;
+      }
+      .label {
+        color: var(--muted);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .value {
+        font-size: 2rem;
+        margin-top: 10px;
+      }
+      .wide {
+        padding: 22px 24px;
+        margin-bottom: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 12px 10px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+      }
+      th {
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+      }
+      .callout {
+        background: var(--accent-soft);
+        border-left: 4px solid var(--accent);
+        padding: 14px 16px;
+        color: var(--ink);
+        margin-top: 12px;
+      }
+      .summary h1,
+      .summary h2,
+      .summary h3 {
+        margin-top: 1.2em;
+      }
+      .summary ul {
+        padding-left: 20px;
+      }
+      a {
+        color: var(--accent);
+      }
+      .decision-layout {
+        display: grid;
+        grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.7fr);
+        gap: 24px;
+        align-items: start;
+      }
+      .controls {
+        display: grid;
+        gap: 14px;
+      }
+      .control {
+        display: grid;
+        gap: 6px;
+      }
+      .control label {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .control output {
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+      }
+      input[type="range"] {
+        accent-color: var(--accent);
+        width: 100%;
+      }
+      .decision-kpis {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .decision-kpi {
+        border-top: 2px solid var(--line);
+        padding-top: 9px;
+      }
+      .decision-kpi .label {
+        font-size: 0.72rem;
+      }
+      .decision-kpi .value {
+        font-size: 1.35rem;
+        margin-top: 4px;
+      }
+      .chart-wrap {
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+      }
+      #demand-chart {
+        width: 100%;
+        height: auto;
+        overflow: visible;
+      }
+      #demand-chart text {
+        fill: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 12px;
+      }
+      #demand-chart .gridline { stroke: var(--line); stroke-width: 1; }
+      #demand-chart .demand-line { fill: none; stroke: #315c72; stroke-width: 3; }
+      #demand-chart .profit-line { fill: none; stroke: #b75d3a; stroke-width: 3; }
+      #demand-chart .recommended { stroke: #8a4b2a; stroke-width: 1.5; stroke-dasharray: 5 4; }
+      #demand-chart .axis { stroke: var(--ink); stroke-width: 1; }
+      .chart-legend { color: var(--muted); font-size: 0.85rem; margin-top: 5px; }
+      .status { color: var(--muted); font-size: 0.9rem; min-height: 1.4em; }
+      @media (max-width: 760px) {
+        .decision-layout { grid-template-columns: 1fr; }
+      }
+      .figures {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 18px;
+      }
+      .figure {
+        margin: 0;
+      }
+      .figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .figure figcaption {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div class="label">Experiment Dashboard</div>
+        <h1>Dissertation Results Snapshot</h1>
+        <p>Dataset: <code>__DATASET_PATH__</code></p>
+        <p>Date range: <strong>__DATE_MIN__</strong> to <strong>__DATE_MAX__</strong> with split at <strong>__SPLIT_DATE__</strong></p>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <div class="label">Rows</div>
+          <div class="value">__ROW_COUNT__</div>
+        </article>
+        <article class="card">
+          <div class="label">Products</div>
+          <div class="value">__PRODUCT_COUNT__</div>
+        </article>
+        <article class="card">
+          <div class="label">Categories</div>
+          <div class="value">__CATEGORY_COUNT__</div>
+        </article>
+        <article class="card">
+          <div class="label">Revenue Uplift</div>
+          <div class="value">__REVENUE_UPLIFT__</div>
+        </article>
+        <article class="card">
+          <div class="label">Profit Uplift</div>
+          <div class="value">__PROFIT_UPLIFT__</div>
+        </article>
+      </section>
+
+      <section class="wide">
+        <h2>Business Outcome Snapshot</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Current</th>
+              <th>Projected</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Revenue</td>
+              <td>__CURRENT_REVENUE__</td>
+              <td>__PROJECTED_REVENUE__</td>
+            </tr>
+            <tr>
+              <td>Profit</td>
+              <td>__CURRENT_PROFIT__</td>
+              <td>__PROJECTED_PROFIT__</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          Offline pricing simulation indicates positive uplift under the current guardrail design.
+        </div>
+      </section>
+
+      <section class="wide">
+        <h2>Interactive Demand and Pricing Decision</h2>
+        <p>Adjust the operating conditions and commercial assumptions. The curve is generated by the fitted demand model; the recommendation maximizes predicted profit within the displayed guardrails.</p>
+        <div class="decision-layout">
+          <div class="controls" id="demand-controls">
+            <div class="control"><label for="current_price">Current price <output data-output="current_price"></output></label><input id="current_price" type="range" min="0.1" max="100" step="0.1" value="10"></div>
+            <div class="control"><label for="competitor_price">Competitor price <output data-output="competitor_price"></output></label><input id="competitor_price" type="range" min="0.1" max="100" step="0.1" value="10"></div>
+            <div class="control"><label for="stock_level">Stock level <output data-output="stock_level"></output></label><input id="stock_level" type="range" min="0" max="1000" step="1" value="100"></div>
+            <div class="control"><label for="page_views">Page views <output data-output="page_views"></output></label><input id="page_views" type="range" min="0" max="2000" step="10" value="250"></div>
+            <div class="control"><label for="prev_price">Previous price <output data-output="prev_price"></output></label><input id="prev_price" type="range" min="0.1" max="100" step="0.1" value="10"></div>
+            <div class="control"><label for="prev_units_sold">Previous units sold <output data-output="prev_units_sold"></output></label><input id="prev_units_sold" type="range" min="0" max="200" step="1" value="10"></div>
+            <div class="control"><label for="rolling_avg_sales">Rolling average sales <output data-output="rolling_avg_sales"></output></label><input id="rolling_avg_sales" type="range" min="0" max="200" step="1" value="10"></div>
+            <div class="control"><label for="stock_ratio">Stock ratio <output data-output="stock_ratio"></output></label><input id="stock_ratio" type="range" min="0" max="1" step="0.01" value="0.5"></div>
+            <div class="control"><label for="view_to_sales_ratio">Views-to-sales ratio <output data-output="view_to_sales_ratio"></output></label><input id="view_to_sales_ratio" type="range" min="0" max="100" step="1" value="20"></div>
+            <div class="control"><label for="unit_cost_pct">Unit cost (% of current price) <output data-output="unit_cost_pct"></output></label><input id="unit_cost_pct" type="range" min="0" max="0.99" step="0.01" value="0.7"></div>
+            <div class="control"><label for="max_change_pct">Maximum price change <output data-output="max_change_pct"></output></label><input id="max_change_pct" type="range" min="0" max="0.5" step="0.01" value="0.1"></div>
+            <div class="control"><label for="min_margin_pct">Minimum margin <output data-output="min_margin_pct"></output></label><input id="min_margin_pct" type="range" min="0" max="0.9" step="0.01" value="0.05"></div>
+          </div>
+          <div>
+            <div class="decision-kpis">
+              <div class="decision-kpi"><div class="label">Recommended price</div><div class="value" id="recommended-price">—</div></div>
+              <div class="decision-kpi"><div class="label">Predicted units</div><div class="value" id="recommended-units">—</div></div>
+              <div class="decision-kpi"><div class="label">Expected revenue</div><div class="value" id="recommended-revenue">—</div></div>
+              <div class="decision-kpi"><div class="label">Expected profit</div><div class="value" id="recommended-profit">—</div></div>
+            </div>
+            <div class="chart-wrap">
+              <svg id="demand-chart" viewBox="0 0 720 390" role="img" aria-label="Price response chart showing predicted demand and expected profit"></svg>
+              <div class="chart-legend">Blue: predicted demand. Orange: expected profit. Dashed line: recommended price.</div>
+            </div>
+            <div class="status" id="prediction-status">Loading model prediction…</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="wide">
+        <h2>Technical Metrics</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>MAE</th>
+              <th>RMSE</th>
+            </tr>
+          </thead>
+          <tbody>
+            __METRICS_ROWS__
+          </tbody>
+        </table>
+      </section>
+
+      <section class="wide">
+        <h2>Experiment Visualizations</h2>
+        <div class="figures">
+          <figure class="figure"><img src="/reports/figures/model_error_comparison.png" alt="Bar chart comparing model MAE and RMSE"><figcaption>Forecast error comparison</figcaption></figure>
+          <figure class="figure"><img src="/reports/figures/business_outcomes.png" alt="Bar charts comparing current and projected revenue and profit"><figcaption>Business outcomes</figcaption></figure>
+          <figure class="figure"><img src="/reports/figures/feature_importance.png" alt="Horizontal bar chart of selected-model feature importance"><figcaption>Feature importance</figcaption></figure>
+          <figure class="figure"><img src="/reports/figures/price_change_stability.png" alt="Histogram and boxplot of pricing changes"><figcaption>Price-change stability</figcaption></figure>
+          <figure class="figure"><img src="/reports/figures/policy_comparison.png" alt="Bar charts comparing policy profit uplift and guardrail activity"><figcaption>Policy comparison</figcaption></figure>
+        </div>
+      </section>
+
+      <section class="wide summary">
+        <h2>Interpretation Summary</h2>
+        __SUMMARY_HTML__
+      </section>
+    </main>
+    <script>
+      (() => {
+        const ids = ["current_price", "competitor_price", "stock_level", "page_views", "prev_price", "prev_units_sold", "rolling_avg_sales", "stock_ratio", "view_to_sales_ratio", "unit_cost_pct", "max_change_pct", "min_margin_pct"];
+        const formatValue = (id, value) => ["unit_cost_pct", "max_change_pct", "min_margin_pct", "stock_ratio"].includes(id) ? `${(value * 100).toFixed(0)}%` : Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 });
+        const readInputs = () => Object.fromEntries(ids.map(id => [id, Number(document.getElementById(id).value)]));
+        const updateLabels = values => ids.forEach(id => { document.querySelector(`[data-output="${id}"]`).textContent = formatValue(id, values[id]); });
+        const svg = document.getElementById("demand-chart");
+        const status = document.getElementById("prediction-status");
+        const setText = (id, value) => document.getElementById(id).textContent = value;
+        const money = value => Number(value).toLocaleString(undefined, { style: "currency", currency: "GBP", maximumFractionDigits: 2 });
+        const drawChart = data => {
+          const width = 720, height = 390, left = 62, right = 22, top = 22, bottom = 56;
+          const plotWidth = width - left - right, plotHeight = height - top - bottom;
+          const prices = data.curve.map(point => point.price);
+          const demand = data.curve.map(point => point.predicted_units);
+          const profits = data.curve.map(point => point.profit);
+          const x = value => left + (value - Math.min(...prices)) / (Math.max(...prices) - Math.min(...prices) || 1) * plotWidth;
+          const yDemand = value => top + plotHeight - value / (Math.max(...demand) || 1) * plotHeight;
+          const minProfit = Math.min(0, ...profits), maxProfit = Math.max(...profits, 1);
+          const yProfit = value => top + plotHeight - (value - minProfit) / (maxProfit - minProfit || 1) * plotHeight;
+          const path = (values, scale) => values.map((value, index) => `${index ? "L" : "M"}${x(prices[index]).toFixed(1)},${scale(value).toFixed(1)}`).join(" ");
+          const ticks = [0, 0.25, 0.5, 0.75, 1];
+          svg.innerHTML = `<line class="axis" x1="${left}" y1="${top + plotHeight}" x2="${width - right}" y2="${top + plotHeight}"/><line class="axis" x1="${left}" y1="${top}" x2="${left}" y2="${top + plotHeight}"/>`;
+          svg.innerHTML += ticks.map(tick => { const value = minProfit + (maxProfit - minProfit) * tick; const y = yProfit(value); return `<line class="gridline" x1="${left}" y1="${y}" x2="${width - right}" y2="${y}"/><text x="${left - 8}" y="${y + 4}" text-anchor="end">${money(value)}</text>`; }).join("");
+          svg.innerHTML += `<path class="demand-line" d="${path(demand, yDemand)}"/><path class="profit-line" d="${path(profits, yProfit)}"/>`;
+          const recommendedX = x(data.recommended.price);
+          svg.innerHTML += `<line class="recommended" x1="${recommendedX}" y1="${top}" x2="${recommendedX}" y2="${top + plotHeight}"/><text x="${recommendedX}" y="${top - 5}" text-anchor="middle">Recommended ${data.recommended.price.toFixed(2)}</text>`;
+          svg.innerHTML += `<text x="${left + plotWidth / 2}" y="${height - 12}" text-anchor="middle">Candidate price</text><text x="16" y="${top + plotHeight / 2}" text-anchor="middle" transform="rotate(-90 16 ${top + plotHeight / 2})">Demand / profit scale</text>`;
+          [prices[0], prices[Math.floor(prices.length / 2)], prices[prices.length - 1]].forEach(value => svg.innerHTML += `<text x="${x(value)}" y="${top + plotHeight + 20}" text-anchor="middle">${value.toFixed(2)}</text>`);
+        };
+        let timer;
+        const refresh = async () => {
+          const values = readInputs(); updateLabels(values); status.textContent = "Updating model prediction…";
+          try {
+            const response = await fetch("/demand-prediction", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(values) });
+            if (!response.ok) throw new Error(await response.text());
+            const data = await response.json();
+            setText("recommended-price", money(data.recommended.price));
+            setText("recommended-units", data.recommended.predicted_units.toLocaleString(undefined, { maximumFractionDigits: 1 }));
+            setText("recommended-revenue", money(data.recommended.revenue));
+            setText("recommended-profit", money(data.recommended.profit));
+            drawChart(data); status.textContent = `Model: ${data.model}. Unit cost assumption: ${money(data.unit_cost)}. Recommendation satisfies the current margin and price-change guardrails.`;
+          } catch (error) { status.textContent = "Prediction unavailable. Run the experiment first to create the trained model artifact."; }
+        };
+        ids.forEach(id => document.getElementById(id).addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(refresh, 120); }));
+        refresh();
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,167 @@
+{
+  "dataset_path": "data/raw/ecommerce_pricing.csv",
+  "train_rows": 201267,
+  "test_rows": 75438,
+  "split_date": "2011-09-30 00:00:00",
+  "epochs": 2,
+  "epoch_summaries": [
+    {
+      "epoch": 1,
+      "seed": 42,
+      "duration_seconds": 398.17,
+      "selected_model": "random_forest",
+      "selected_model_metrics": {
+        "mae": 0.5398820223229672,
+        "rmse": 101.82848814642487
+      },
+      "projected_profit": 1635598.43,
+      "guardrail_trigger_rate_pct": 22.3468
+    },
+    {
+      "epoch": 2,
+      "seed": 43,
+      "duration_seconds": 406.03,
+      "selected_model": "random_forest",
+      "selected_model_metrics": {
+        "mae": 0.5361669185291232,
+        "rmse": 102.14731290602752
+      },
+      "projected_profit": 1635966.13,
+      "guardrail_trigger_rate_pct": 22.3468
+    }
+  ],
+  "runtime_estimate_seconds": 1424.45,
+  "actual_runtime_seconds": 806.75,
+  "technical_metrics": {
+    "static_baseline": {
+      "mae": 24.49404809247329,
+      "rmse": 305.1636052182281
+    },
+    "linear_regression": {
+      "mae": 7.624715317125023,
+      "rmse": 124.81644047492267
+    },
+    "random_forest": {
+      "mae": 0.5361669185291232,
+      "rmse": 102.14731290602752
+    },
+    "gradient_boosting_tuned": {
+      "mae": 2.335437346655637,
+      "rmse": 163.94202868240163
+    },
+    "xgboost": {
+      "mae": 2.8476603031158447,
+      "rmse": 295.7290778736511
+    },
+    "catboost": {
+      "mae": 3.523449808979807,
+      "rmse": 292.23459606505713
+    }
+  },
+  "business_metrics": {
+    "current_revenue": 3732318.93,
+    "current_profit": 1455809.01,
+    "projected_revenue": 4545419.04,
+    "projected_profit": 1920228.06,
+    "revenue_uplift_pct": 21.79,
+    "profit_uplift_pct": 31.9
+  },
+  "stability_metrics": {
+    "average_price_change_pct": 6.0938,
+    "average_absolute_price_change_pct": 6.1039,
+    "median_absolute_price_change_pct": 5.036,
+    "max_absolute_price_change_pct": 16.6667,
+    "upward_changes": 75341,
+    "downward_changes": 76,
+    "unchanged_prices": 21
+  },
+  "guardrail_summary": {
+    "rows_evaluated": 75438,
+    "rows_with_guardrail_trigger": 16858,
+    "guardrail_trigger_rate_pct": 22.3468,
+    "reason_counts": {
+      "min_price_floor": 16858,
+      "max_change_upper_bound": 16790
+    },
+    "selection_reason_counts": {
+      "best_feasible_candidate": 58580,
+      "best_adjusted_candidate": 16858
+    },
+    "stability_metrics": {
+      "average_price_change_pct": 6.0938,
+      "average_absolute_price_change_pct": 6.1039,
+      "median_absolute_price_change_pct": 5.036,
+      "max_absolute_price_change_pct": 16.6667,
+      "upward_changes": 75341,
+      "downward_changes": 76,
+      "unchanged_prices": 21
+    }
+  },
+  "pricing_policy_metrics": {
+    "rule_based_baseline": {
+      "current_revenue": 3732318.93,
+      "current_profit": 1455809.01,
+      "projected_revenue": 4268116.01,
+      "projected_profit": 1770097.77,
+      "revenue_uplift_pct": 14.36,
+      "profit_uplift_pct": 21.59,
+      "average_absolute_price_change_pct": 4.5883,
+      "guardrail_trigger_rate_pct": 22.6517
+    },
+    "linear_regression": {
+      "current_revenue": 3732318.93,
+      "current_profit": 1455809.01,
+      "projected_revenue": 5251079.21,
+      "projected_profit": 2180663.21,
+      "revenue_uplift_pct": 40.69,
+      "profit_uplift_pct": 49.79,
+      "average_absolute_price_change_pct": 6.1038,
+      "guardrail_trigger_rate_pct": 22.3468
+    },
+    "random_forest": {
+      "current_revenue": 3732318.93,
+      "current_profit": 1455809.01,
+      "projected_revenue": 3875662.28,
+      "projected_profit": 1635966.13,
+      "revenue_uplift_pct": 3.84,
+      "profit_uplift_pct": 12.38,
+      "average_absolute_price_change_pct": 6.104,
+      "guardrail_trigger_rate_pct": 22.3468
+    },
+    "gradient_boosting_tuned": {
+      "current_revenue": 3732318.93,
+      "current_profit": 1455809.01,
+      "projected_revenue": 3898372.15,
+      "projected_profit": 1648428.11,
+      "revenue_uplift_pct": 4.45,
+      "profit_uplift_pct": 13.23,
+      "average_absolute_price_change_pct": 6.104,
+      "guardrail_trigger_rate_pct": 22.3468
+    },
+    "xgboost": {
+      "current_revenue": 3732318.93,
+      "current_profit": 1455809.01,
+      "projected_revenue": 4023895.57,
+      "projected_profit": 1711843.87,
+      "revenue_uplift_pct": 7.81,
+      "profit_uplift_pct": 17.59,
+      "average_absolute_price_change_pct": 6.0561,
+      "guardrail_trigger_rate_pct": 22.3468
+    },
+    "catboost": {
+      "current_revenue": 3732318.93,
+      "current_profit": 1455809.01,
+      "projected_revenue": 3534636.48,
+      "projected_profit": 1494846.13,
+      "revenue_uplift_pct": -5.3,
+      "profit_uplift_pct": 2.68,
+      "average_absolute_price_change_pct": 5.9124,
+      "guardrail_trigger_rate_pct": 22.3468
+    }
+  },
+  "selected_model": "random_forest",
+  "selected_model_metrics": {
+    "mae": 0.5361669185291232,
+    "rmse": 102.14731290602752
+  }
+}
